@@ -1,5 +1,8 @@
 import { renderBlock } from './lib.js';
-import { SearchFormData } from './search-form.js';
+import { SearchFormData } from './search-form-type.js';
+
+const ONE_MONTH = 1
+const TWO_MONTH = 2
 
 export function renderSearchFormBlock(checkin: number, checkout: number) {
   const formatDate = (date: Date) => {

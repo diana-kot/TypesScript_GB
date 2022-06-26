@@ -8,19 +8,20 @@ export class User {
   }
 }
 
-const user = new User('Wade Warren', './img/avatar.png');
+const user = new User("Wade Warren", "./img/avatar.png");
 
-localStorage.setItem('user', JSON.stringify(user));
-localStorage.setItem('favoritesAmount', '2');
+localStorage.setItem("user", JSON.stringify(user));
+localStorage.setItem("favoritesAmount", "2");
 
 export const getUserData = () => {
   const user = JSON.parse(localStorage.getItem('user'));
-
-  return user;
+  if ("userName" in user && 'avatarUrl' in user) {
+    return user;
+  }
 };
 
 export const getFavoritesAmount = () => {
-  const favoritesAmount = JSON.parse(localStorage.getItem('favoritesAmount'));
+  const favoritesAmount = JSON.parse(Number(localStorage.getItem("favoritesAmount")));
 
   return favoritesAmount;
 };
