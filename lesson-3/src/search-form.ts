@@ -6,7 +6,7 @@ import {renderSearchResultsBlock} from './search-results.js'
 const ONE_MONTH = 1;
 const TWO_MONTH = 2;
 
-export function renderSearchFormBlock(checkin?: Date, checkout?: Date) {
+export function renderSearchFormBlock(checkin?: number, checkout?: number) {
   const formatDate = (date: Date) => {
     return (
       date.getFullYear() +
@@ -84,7 +84,7 @@ export function renderSearchFormBlock(checkin?: Date, checkout?: Date) {
           </form>
           <div>
             <label for="max-price">Макс. цена суток</label>
-            <input id="max-price" type="text" value="" name="price" class="max-price" />
+            <input id="max-price" type="number" value="" name="price" class="max-price"/>
           </div>
           <div>
             <div><button id="btn-search">Найти</button></div>
@@ -107,15 +107,25 @@ export function renderSearchFormBlock(checkin?: Date, checkout?: Date) {
     const coordinates = "59.9386,30.3141";
     const checkInDate = checkin;
     const checkOutDate = checkout;
+    const maxPrice = document.getElementById('max-price')
+    maxPrice.addEventListener<'change'>('change', (event: MouseEvent) => {
+    //  const valueInput = event.target.value
+    // console.log(value)
+      
+    })
 
     fetch(
       baseUrl +
         `/places?coordinates=${coordinates}&checkInDate=${checkInDate}&checkOutDate=${checkOutDate}&maxPrice=10000`
     )
       .then((response) => {
+        // if (!response.ok) {
+        //   throw new Error(`Error:${response.status}`);
+        // }
         return response.json();
       })
       .then((data) => {
+        console.log(data)
         renderSearchResultsBlock(data);
       });
   }

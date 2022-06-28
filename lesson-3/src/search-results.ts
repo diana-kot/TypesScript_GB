@@ -1,62 +1,70 @@
-import { renderBlock } from './lib.js'
+import { renderBlock } from "./lib.js";
+export interface SearchFormResults {
+  id: string;
+  name: string;
+  description: string;
+  image: string[];
+  remoteness: number[];
+  bookedDates: Date[];
+  price: number;
+}
 
-export function renderSearchStubBlock () {
+export function renderSearchStubBlock() {
   renderBlock(
-    'search-results-block',
+    "search-results-block",
     `
     <div class="before-results-block">
       <img src="img/start-search.png" />
       <p>Чтобы начать поиск, заполните форму и&nbsp;нажмите "Найти"</p>
     </div>
     `
-  )
+  );
 }
 
-export function renderEmptyOrErrorSearchBlock (reasonMessage) {
+export function renderEmptyOrErrorSearchBlock(reasonMessage) {
   renderBlock(
-    'search-results-block',
+    "search-results-block",
     `
     <div class="no-results-block">
       <img src="img/no-results.png" />
       <p>${reasonMessage}</p>
     </div>
     `
-  )
+  );
 }
 
-export function renderSearchResultsBlock (places) {
-  let itemsListPlaces = ''
+export function renderSearchResultsBlock(places: SearchFormResults[] | null) {
+  let itemsListPlaces = "";
 
-  if(Array.isArray(places) && places.length>0) {
-    places.forEach((places)=>{
+  if (Array.isArray(places) && places.length > 0) {
+    places.forEach((places) => {
       itemsListPlaces += ` <li class="result">
       <div class="result-container">
         <div class="result-img-container">
           <div class="favorites active"></div>
-          <img class="result-img" src="./img/result-1.png" alt="">
+          <img class="result-img" src=${places.image} alt=${places.name}>
         </div>	
         <div class="result-info">
           <div class="result-info--header">
-    places.forEach((places)=>{
+            
             <p>${places.name}</p>
-            <p class="price">13000&#8381;</p>
+            <p class="price">${places.price}&#8381;</p>
           </div>
-          <div class="result-info--map"><i class="map-icon"></i> 2.5км от вас</div>
+          <div class="result-info--map"><i class="map-icon"></i> ${places.remoteness}км от вас</div>
           <div class="result-info--descr">${places.description}</div>
           <div class="result-info--footer">
             <div>
-              <button>Забронировать</button>
+              <button ${places.id}>Забронировать</button>
             </div>
           </div>
         </div>
       </div>
-    </li>`
-    })
-
+    </li>`;
+    });
   }
 
   renderBlock(
-    'search-results-block',
+    "search-results-block",
     `
     <div class="search-results-header">
         <p>Результаты поиска</p>
@@ -73,8 +81,8 @@ export function renderSearchResultsBlock (places) {
   
     </ul>
     `
-  )
+  );
 
-  const nodeListPlace = document.querySelector('.results-list--js')
-  nodeListPlace.insertAdjacentHTML('afterbegin', itemsListPlaces)
+  const nodeListPlace = document.querySelector(".results-list--js");
+  nodeListPlace.insertAdjacentHTML("afterbegin", itemsListPlaces);
 }
