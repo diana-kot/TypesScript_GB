@@ -1,27 +1,58 @@
-import { renderBlock } from './lib.js'
+import { renderBlock } from './lib.js';
+import { SearchFormData } from './search-form-type.js';
 
-export function renderSearchFormBlock (checkin: number, checkout: number) {
-  
+const ONE_MONTH = 1
+const TWO_MONTH = 2
+
+export function renderSearchFormBlock(checkin: number, checkout: number) {
   const formatDate = (date: Date) => {
-    return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
-  }
+    return (
+      date.getFullYear() +
+      '-' +
+      ('0' + (date.getMonth() + 1)).slice(-2) +
+      '-' +
+      ('0' + date.getDate()).slice(-2)
+    );
+  };
 
-  const userCheckin = new Date(checkin)
-  const formatUserCheckin = formatDate(userCheckin)
-  const userCheckout = new Date(checkout)
-  const formatUserCheckout = formatDate(userCheckout)
+  const userCheckin = new Date(checkin);
+  const formatUserCheckin = formatDate(userCheckin);
+  const userCheckout = new Date(checkout);
+  const formatUserCheckout = formatDate(userCheckout);
 
   const today = new Date();
 
-  const minCheckin = formatDate(today)
+  const minCheckin = formatDate(today);
   const minCheckout = new Date(today.setDate(today.getDate() + 1));
-  const minCheckoutDay = formatDate(minCheckout)
+  const minCheckoutDay = formatDate(minCheckout);
 
   const maxCheckMonth = new Date(today.setMonth(today.getMonth() + 1));
-  const lastDayMaxCheckMonth = new Date(maxCheckMonth.getFullYear(), maxCheckMonth.getMonth() + 1, 0);
-  const maxCheck = formatDate(lastDayMaxCheckMonth)
-  
-  
+  const lastDayMaxCheckMonth = new Date(
+    maxCheckMonth.getFullYear(),
+    maxCheckMonth.getMonth() + 1,
+    0
+  );
+  const maxCheck = formatDate(lastDayMaxCheckMonth);
+
+  const getFormValue = (e) => {
+    e.preventDefault();
+
+    const dataValue: SearchFormData = {
+      city: (<HTMLInputElement>document.getElementById('city')).value,
+      checkIn: (<HTMLInputElement>document.getElementById('check-in-date'))
+        .value,
+      checkOut: (<HTMLInputElement>document.getElementById('check-out-date'))
+        .value,
+      price: (<HTMLInputElement>document.getElementById('max-price')).value,
+    };
+    console.log(dataValue);
+    funcSearch(dataValue);
+  };
+
+  const funcSearch = (data: SearchFormData): void => {
+    console.log(data);
+  };
+
   renderBlock(
     'search-form-block',
     `
@@ -60,5 +91,7 @@ export function renderSearchFormBlock (checkin: number, checkout: number) {
       </fieldset>
     </form>
     `
-  )
+  );
+  const form = document.querySelector('form')
+  form.addEventListener('submit', getFormValue);
 }
