@@ -4,7 +4,7 @@
   "scripts": {
     "build": "tsc",
     "build:dev": "tsc -p tsconfig-dev.json",
-    "start": "http-server -p 3002",
+    "start": "http-server -p 3003",
     "lint": "eslint src --ext .js --ext .ts",
     "lint-fix": "eslint src --ext .js --ext .ts --fix"
   },
