@@ -1,13 +1,5 @@
 import { renderBlock } from "./lib.js";
-export interface SearchFormResults {
-  id: string;
-  name: string;
-  description: string;
-  image: string[];
-  remoteness: number[];
-  bookedDates: Date[];
-  price: number;
-}
+import { isFavoriteItem, toggleFavoriteItem } from "./favorite.js";
 
 export function renderSearchStubBlock() {
   renderBlock(
@@ -33,36 +25,41 @@ export function renderEmptyOrErrorSearchBlock(reasonMessage) {
   );
 }
 
-export function renderSearchResultsBlock(places: SearchFormResults[] | null) {
-  let itemsListPlaces = "";
-
+export function renderSearchResultsBlock(places) {
+  let items = "";
+  const { id, source } = places;
+  const toggleIdPrefix = "toggle-";
+  const toggleId = `${toggleIdPrefix}${source}_${id}`;
   if (Array.isArray(places) && places.length > 0) {
-    places.forEach((places) => {
-      itemsListPlaces += ` <li class="result">
+    places.forEach((place) => {
+      items += `<li class="result">
       <div class="result-container">
-        <div class="result-img-container">
-          <div class="favorites active"></div>
-          <img class="result-img" src=${places.image} alt=${places.name}>
-        </div>	
-        <div class="result-info">
-          <div class="result-info--header">
-            
-            <p>${places.name}</p>
-            <p class="price">${places.price}&#8381;</p>
-          </div>
-          <div class="result-info--map"><i class="map-icon"></i> ${places.remoteness}км от вас</div>
-          <div class="result-info--descr">${places.description}</div>
-          <div class="result-info--footer">
-            <div>
-              <button ${places.id}>Забронировать</button>
+      <div class="result-img-container">
+        <div id=${toggleId} class="favorites ${
+        isFavoriteItem(toggleId) ? "active" : ""
+      }"
+        ></div>
+            <img class="result-img" src=${place.image} alt=${place.name}>
+          </div>	
+          <div class="result-info">
+            <div class="result-info--header">
+              <p>${place.name}</p>
+              <p class="price">${place.price}&#8381;</p>
+            </div>
+            <div class="result-info--map"><i class="map-icon"></i> ${
+              place.remoteness
+            }км от вас</div>
+            <div class="result-info--descr">${place.description}</div>
+            <div class="result-info--footer">
+              <div>
+                <button>Забронировать</button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </li>`;
+      </li>`;
     });
   }
-
   renderBlock(
     "search-results-block",
     `
@@ -77,12 +74,15 @@ export function renderSearchResultsBlock(places: SearchFormResults[] | null) {
             </select>
         </div>
     </div>
-    <ul class="results-list results-list--js">
-  
+    <ul class="results-list" id="results-list">
+     
     </ul>
     `
   );
-
-  const nodeListPlace = document.querySelector(".results-list--js");
-  nodeListPlace.insertAdjacentHTML("afterbegin", itemsListPlaces);
+  const list = document.getElementById("results-list");
+  list.insertAdjacentHTML("afterbegin", items);
 }
+const favoritesButtons = document.querySelectorAll(".favorites");
+favoritesButtons.forEach((button) => {
+  button.addEventListener("click", (event) => toggleFavoriteItem(event));
+});
